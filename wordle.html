@@ -18,7 +18,7 @@
             width: 6vw;
             margin-left: 1vw;
             margin-right: 1vw;
-            background-color: rgb(245, 234, 221);
+            background-color: #f5eadd;
             border: .1em solid #000000;
             border-radius: .5vw;
             display: inline-block;
@@ -73,18 +73,17 @@
         let dict;
         let url = 'https://api.dictionaryapi.dev/api/v2/entries/en/' + word;
         let response = await fetch(url);
-        console.log(response.status);
-        if (response.ok) { // i know response.ok is supposed to do this but it wasn't working properly with this website for some reason
+        if (response.ok) { 
             dict = true;
         } else {
             dict = false;
         }
-        console.log(dict);
         return dict;
     }
 
 
     wordle = get_wordle();
+    console.log(wordle);
         
     async function test() {
         document.getElementById("messagehere_red").innerHTML = '';
@@ -92,7 +91,6 @@
 
         let value = document.getElementById("guess").value;
         let value_in_dict = await check_dict(value);
-        console.log("value" + " " + value_in_dict);
         if (value_in_dict == false) {
             document.getElementById("messagehere_red").innerHTML = "That's not a word! Please try again."
         }
@@ -118,14 +116,14 @@
         if (value == wordle) {
             // what to do if they found the wordle 
             document.getElementById("messagehere_blue").innerHTML += "Congratulations, you guessed the wordle!" 
-			document.getElementById("textentry").innerHTML += "<input type='button' value = 'Restart Game' onClick = 'window.location.reload()'></button>";
+            document.getElementById("textentry").innerHTML += "<input type='button' value = 'Restart Game' onClick = 'window.location.reload()'></button>";
             document.getElementById("submitbutton").disabled = true;
             document.getElementById("guess").disabled = true;
         } else{
         // mark the row as 'no longer available' and move to the next
         curr_row++;
         if (curr_row > 6) {
-            document.getElementById("messagehere_red").innerHTML += "Sorry, you didn't guess the wordle! Wanna play again? Click below to restart:" 
+            document.getElementById("messagehere_red").innerHTML += "Sorry, you didn't guess the wordle! The wordle was: " + wordle + ".<br />Wanna play again? Click below to restart:" 
             document.getElementById("textentry").innerHTML += "<input type='button' value = 'Restart Game' onClick = 'window.location.reload()'></button>";
             document.getElementById("submitbutton").disabled = true;
             document.getElementById("guess").disabled = true;
@@ -135,45 +133,11 @@
         }
     }
 
-    function reset() {
-    curr_row = 6;
-    for(curr_row; curr_row >= 0; curr_row--) {
-        for(index = 0; index < 6; index ++) {
-    elem_id = "box" + curr_row + "_" + index;
-    document.getElementById(elem_id).innerHTML = "";
-    document.getElementById(elem_id).style.backgroundColor = rgb(245, 234, 221);
-    }
-    }
-
-
-    curr_row = 1;
-        // go through all rows and delete everything
-    }
-
-
     </script>
 
-    <!---Game responsive down to 600px-->
-
-    <!--- Game must include:
-    An array
-	An arrow function
-	An event handler
-	.map or .forEach
-	A JavaScript class
-
-    For extra credit:
-    An API that picks a 5-letter word in real time, and/or one that checks if a 5-letter guess is a valid word
-    Display the average guesses needed for the user on that device over multiple browser sessions (hint- use a cookie)
--->
 </head>
 
 <body>
-<div id = "wordselect">
-    <!---Randomly select the word of the day--->
-    <!---API call-->
-</div>
-
 <div id = "wordle">
 <div class = "boxes">
 <div class = "row1" id = "row1">
@@ -182,9 +146,6 @@
     <div class = "box" id = "box1_2"> </div>
     <div class = "box" id = "box1_3"> </div>
     <div class = "box" id = "box1_4"> </div>
-    <!---Take text from textentry onClick of button, add it to the 5 boxes-->
-    <!---Check it against "the word", if it is identical end game, if not report status of each letter-->
-    <!---Add used letters to usedletterboard-->
 </div>
 <br />
 <div class = "row2" id = 2>
@@ -234,14 +195,11 @@
     <label class = "lbl" for="gg">Guess</label>
     <input type="text" class = "textf" id="guess" name="gguess" placeholder="Type Guess Here">
     <input class = "button" id = "submitbutton" type = "button" value = "Submit" onclick = "test()">
-    <!---onclick, need a JS onclick function that takes the text entry, tests whether it is a five-letter word, inserts it into the next available row, then checks whether it is correct-->
-    <!---error message if it doesnt work-->
-    <!---this field should go away once reaching 5 guesses-->
 </div>
 
 <div id = "usedletterboard">
 </div>
-	
+
 </div>
 
 
