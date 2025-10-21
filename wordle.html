@@ -5,7 +5,6 @@
 
     </div>
 
-    <!---CSS to make boxes into boxes-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <style type="text/css">
         body,html{font-family:"Lato", "sans-serif"}
@@ -163,7 +162,7 @@
         // mark the row as 'no longer available' and move to the next
         curr_row++;
         if (curr_row > 6) {
-            document.getElementById("messagehere_red").innerHTML += "Sorry, you didn't guess the wordle! The wordle was: " + wordle + ".<br />Wanna play again? Click below to restart:" 
+            document.getElementById("messagehere_red").innerHTML += "Sorry, you didn't guess the wordle!<br />The wordle was: <strong>" + wordle.toUpperCase() + "</strong>.<br />Wanna play again? Click below to restart!" 
             document.getElementById("textentry").innerHTML += "<input type='button' value = 'Restart Game' onClick = 'window.location.reload()'></button>";
             document.getElementById("submitbutton").disabled = true;
             document.getElementById("guess").disabled = true;
