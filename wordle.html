@@ -118,6 +118,7 @@
         if (value == wordle) {
             // what to do if they found the wordle 
             document.getElementById("messagehere_blue").innerHTML += "Congratulations, you guessed the wordle!" 
+			document.getElementById("textentry").innerHTML += "<input type='button' value = 'Restart Game' onClick = 'window.location.reload()'></button>";
             document.getElementById("submitbutton").disabled = true;
             document.getElementById("guess").disabled = true;
         } else{
