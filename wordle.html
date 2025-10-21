@@ -1,0 +1,252 @@
+<html>
+<head>
+
+    <div id = "wordlist">
+
+    </div>
+
+    <!---CSS to make boxes into boxes-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <style type="text/css">
+        body,html{font-family:"Lato", "sans-serif"}
+        .box {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 6vw;
+            height: 6vw;
+            width: 6vw;
+            margin-left: 1vw;
+            margin-right: 1vw;
+            background-color: rgb(245, 234, 221);
+            border: .1em solid #000000;
+            border-radius: .5vw;
+            display: inline-block;
+        };
+        .row {
+            margin: auto;
+            flex-wrap:nowrap;
+        };
+        .boxes{
+            display: flex;
+        }
+        #row1 {
+            grid-row: 1 / span 2;
+            
+        };
+        #row2 {
+            grid-row: 3 / span 2;
+        };
+        #row3 {
+            grid-row: 5 / span 2;
+        };
+        #row4 {
+            grid-row: 7 / span 2;
+        };
+        #row5 {
+            grid-row: 9 / span 2;
+        };
+        #row6 {
+            grid-row: 11 / span 2;
+        };
+
+
+    </style>
+
+    <script>
+        let curr_row = 1;
+
+        async function get_wordle() {
+        let response = await fetch('https://random-word-api.herokuapp.com/word?length=5');
+
+        if (response.ok) {
+            let text = await response.text();
+            wordle = text.replace(/[^a-zA-Z]/g, "");
+        } else {
+            alert("HTTP-Error: " + response.status);
+            wordle = "";
+        }
+        return wordle;
+    }
+
+    async function check_dict(word) {
+        let dict;
+        let url = 'https://api.dictionaryapi.dev/api/v2/entries/en/' + word;
+        let response = await fetch(url);
+        console.log(response.status);
+        if (response.ok) { // i know response.ok is supposed to do this but it wasn't working properly with this website for some reason
+            dict = true;
+        } else {
+            dict = false;
+        }
+        console.log(dict);
+        return dict;
+    }
+
+
+    wordle = get_wordle();
+        
+    async function test() {
+        document.getElementById("messagehere_red").innerHTML = '';
+        document.getElementById("messagehere_blue").innerHTML = '';
+
+        let value = document.getElementById("guess").value;
+        let value_in_dict = await check_dict(value);
+        console.log("value" + " " + value_in_dict);
+        if (value_in_dict == false) {
+            document.getElementById("messagehere_red").innerHTML = "That's not a word! Please try again."
+        }
+        else if (value.length != 5){
+        document.getElementById("messagehere_red").innerHTML = "Your entry must have exactly five letters! Please try again."
+        } else {
+
+        // take their guess, split it into letters
+        let guess = value.split("");
+        let wordle_s = wordle.split("");
+
+        // i gnsert the letters one-by-one into the cells of that row
+        guess.forEach((elem, index) => {
+            elem_id = "box" + curr_row + "_" + index;
+            document.getElementById(elem_id).innerHTML += elem.toUpperCase();
+            if (elem == wordle_s[index]){
+                document.getElementById(elem_id).style.backgroundColor = '#08f127';
+            } else if (wordle_s.includes(elem)){
+                document.getElementById(elem_id).style.backgroundColor = '#fcff39';
+            } 
+        })
+
+        if (value == wordle) {
+            // what to do if they found the wordle 
+            document.getElementById("messagehere_blue").innerHTML += "Congratulations, you guessed the wordle!" 
+            document.getElementById("submitbutton").disabled = true;
+            document.getElementById("guess").disabled = true;
+        } else{
+        // mark the row as 'no longer available' and move to the next
+        curr_row++;
+        if (curr_row > 6) {
+            document.getElementById("messagehere_red").innerHTML += "Sorry, you didn't guess the wordle! Wanna play again? Click below to restart:" 
+            document.getElementById("textentry").innerHTML += "<input type='button' value = 'Restart Game' onClick = 'window.location.reload()'></button>";
+            document.getElementById("submitbutton").disabled = true;
+            document.getElementById("guess").disabled = true;
+
+        }
+        }
+        }
+    }
+
+    function reset() {
+    curr_row = 6;
+    for(curr_row; curr_row >= 0; curr_row--) {
+        for(index = 0; index < 6; index ++) {
+    elem_id = "box" + curr_row + "_" + index;
+    document.getElementById(elem_id).innerHTML = "";
+    document.getElementById(elem_id).style.backgroundColor = rgb(245, 234, 221);
+    }
+    }
+
+
+    curr_row = 1;
+        // go through all rows and delete everything
+    }
+
+
+    </script>
+
+    <!---Game responsive down to 600px-->
+
+    <!--- Game must include:
+    An array
+	An arrow function
+	An event handler
+	.map or .forEach
+	A JavaScript class
+
+    For extra credit:
+    An API that picks a 5-letter word in real time, and/or one that checks if a 5-letter guess is a valid word
+    Display the average guesses needed for the user on that device over multiple browser sessions (hint- use a cookie)
+-->
+</head>
+
+<body>
+<div id = "wordselect">
+    <!---Randomly select the word of the day--->
+    <!---API call-->
+</div>
+
+<div id = "wordle">
+<div class = "boxes">
+<div class = "row1" id = "row1">
+    <div class = "box" id = "box1_0"> </div>
+    <div class = "box" id = "box1_1"> </div>
+    <div class = "box" id = "box1_2"> </div>
+    <div class = "box" id = "box1_3"> </div>
+    <div class = "box" id = "box1_4"> </div>
+    <!---Take text from textentry onClick of button, add it to the 5 boxes-->
+    <!---Check it against "the word", if it is identical end game, if not report status of each letter-->
+    <!---Add used letters to usedletterboard-->
+</div>
+<br />
+<div class = "row2" id = 2>
+    <div class = "box" id = "box2_0"></div>
+    <div class = "box" id = "box2_1"></div>
+    <div class = "box" id = "box2_2"></div>
+    <div class = "box" id = "box2_3"></div>
+    <div class = "box" id = "box2_4"></div>
+</div>
+<br />
+<div class = "row3" id = 3>
+    <div class = "box" id = "box3_0"></div>
+    <div class = "box" id = "box3_1"></div>
+    <div class = "box" id = "box3_2"></div>
+    <div class = "box" id = "box3_3"></div>
+    <div class = "box" id = "box3_4"></div>
+</div>
+<br />
+<div class = "row4" id = 4>
+    <div class = "box" id = "box4_0"></div>
+    <div class = "box" id = "box4_1"></div>
+    <div class = "box" id = "box4_2"></div>
+    <div class = "box" id = "box4_3"></div>
+    <div class = "box" id = "box4_4"></div>
+</div>
+<br />
+<div class = "row5" id = 5>
+    <div class = "box" id = "box5_0"></div>
+    <div class = "box" id = "box5_1"></div>
+    <div class = "box" id = "box5_2"></div>
+    <div class = "box" id = "box5_3"></div>
+    <div class = "box" id = "box5_4"></div>
+</div>
+<br />
+<div class = "row6" id = 6>
+    <div class = "box" id = "box6_0"></div>
+    <div class = "box" id = "box6_1"></div>
+    <div class = "box" id = "box6_2"></div>
+    <div class = "box" id = "box6_3"></div>
+    <div class = "box" id = "box6_4"></div>
+</div></div>
+<div>
+    <p id = "messagehere_red" style="color:#8b0000"></p>
+    <p id = "messagehere_blue" style="color:#0000ff"></p>
+</div>
+<div id = "textentry">
+    <label class = "lbl" for="gg">Guess</label>
+    <input type="text" class = "textf" id="guess" name="gguess" placeholder="Type Guess Here">
+    <input class = "button" id = "submitbutton" type = "button" value = "Submit" onclick = "test()">
+    <!---onclick, need a JS onclick function that takes the text entry, tests whether it is a five-letter word, inserts it into the next available row, then checks whether it is correct-->
+    <!---error message if it doesnt work-->
+    <!---this field should go away once reaching 5 guesses-->
+</div>
+
+<div id = "usedletterboard">
+</div>
+
+<div id = "restartbutton">
+    <!---Button that must be hidden until 5 guesses complete-->
+</div>
+</div>
+
+
+
+</body>
+</html>
